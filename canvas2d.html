@@ -11,6 +11,7 @@
   <script src="Cesium/Cesium.js"></script>
   <script type="text/javascript" src="heatmap.min.js"></script>
   <script type="text/javascript" src="CesiumHeatmap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
   <style>
       @import url(Cesium/Widgets/widgets.css);
       html, body, #cesiumContainer {
@@ -21,9 +22,60 @@
 </head>
 <body>
     <div id="cesiumContainer"></div>
+    <div id="my-gui-container" style="position:absolute;top:0;"></div>
     <script type="text/javascript">
         var viewer = new Cesium.Viewer('cesiumContainer');
         var heatmap = new CesiumHeatmap(viewer,'./busstop2016.geojson')
+        var config = {
+            maxOpacity: .9,
+            minOpacity: .1,
+            gradient: {
+                // enter n keys between 0 and 1 here
+                // for gradient color customization
+                '0.3': 'blue',
+                '0.5': 'green',
+                '0.7': 'yellow',
+                '0.95': 'red'
+            },
+        };
+        var palette = {
+            color0:[ 0, 0, 255 ],
+            color1:[ 0, 255, 0 ],
+            color2:[ 255, 255, 0 ],
+            color3:[ 255, 0, 0 ],
+        }
+        var gui = new dat.GUI({ autoPlace: false });
+        var customContainer = document.getElementById('my-gui-container');
+        customContainer.appendChild(gui.domElement);
+        
+        gui.add(config, 'maxOpacity', 0.1, 1.0).onFinishChange(function(value){
+            heatmap.config(config)
+        });
+        gui.add(config, 'minOpacity', 0.1, 1.0).onFinishChange(function(value){
+            heatmap.config(config)
+        });
+        var gradient = gui.addFolder('gradient');
+        gradient.addColor(palette, 'color0').onFinishChange(function(value){
+            var color = 'rgb('+parseInt(value[0])+','+parseInt(value[1])+','+parseInt(value[2])+')';
+            config.gradient['0.3'] = color;
+            heatmap.config(config);
+        });
+        gradient.addColor(palette, 'color1').onFinishChange(function(value){
+            var color = 'rgb('+parseInt(value[0])+','+parseInt(value[1])+','+parseInt(value[2])+')';
+            config.gradient['0.5'] = color;
+            heatmap.config(config);
+        });
+        gradient.addColor(palette, 'color2').onFinishChange(function(value){
+            var color = 'rgb('+parseInt(value[0])+','+parseInt(value[1])+','+parseInt(value[2])+')';
+            config.gradient['0.7'] = color;
+            heatmap.config(config);
+        });
+        gradient.addColor(palette, 'color3').onFinishChange(function(value){
+            var color = 'rgb('+parseInt(value[0])+','+parseInt(value[1])+','+parseInt(value[2])+')';
+            config.gradient['0.95'] = color;
+            heatmap.config(config);
+        });
+
     </script>  
 </body>
 </html>

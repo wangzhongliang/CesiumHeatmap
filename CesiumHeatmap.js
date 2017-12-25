@@ -41,7 +41,7 @@
                 gradient: {
                     // enter n keys between 0 and 1 here
                     // for gradient color customization
-                    '.3': 'blue',
+                    '.3': 'blue',//#0000ff
                     '.5': 'green',
                     '.7': 'yellow',
                     '.95': 'red'
